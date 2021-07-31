@@ -201,6 +201,11 @@ trait BookingScopes
 
     /**
      * Get bookings between given start and end dates inclusively.
+     * 
+     * - Check for two things - 
+     * Either starts_at or ends_at falling into any of the already existing booking intervals; 
+     * or starts_at before and ends_at after those of an existing booking 
+     * (because you can’t make a new booking from 9am to 14am, if one from 10am to 11am already exists.)
      *
      * @param string $startsAt
      * @param string $endsAt
