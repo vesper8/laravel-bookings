@@ -224,5 +224,5 @@ trait BookingScopes
                             ->where('ends_at', '>', (new Carbon($endsAt)))
                     )
             );
-    }    
+    }
 }
