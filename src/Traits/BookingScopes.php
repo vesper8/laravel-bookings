@@ -198,4 +198,26 @@ trait BookingScopes
                     ->where('canceled_at', '>', new Carbon($startsAt))
                     ->where('canceled_at', '<', new Carbon($endsAt));
     }
+
+    /**
+     * Get bookings between given start and end dates inclusively.
+     *
+     * @param string $startsAt
+     * @param string $endsAt
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function bookingsBetween(string $startsAt, string $endsAt): MorphMany
+    {
+        return $this->bookings()
+            ->whereNull('canceled_at')
+            ->where(
+                fn ($q) => $q->whereBetween('starts_at', [(new Carbon($startsAt)), (new Carbon($endsAt))->subSeconds(1)])
+                    ->orWhereBetween('ends_at', [(new Carbon($startsAt))->addSeconds(1), (new Carbon($endsAt))])
+                    ->orWhere(
+                        fn ($q) => $q->where('starts_at', '<', (new Carbon($startsAt)))
+                            ->where('ends_at', '>', (new Carbon($endsAt)))
+                    )
+            );
+    }    
 }
